@@ -1,0 +1,88 @@
+This guide discusses installing an encrypted Arch Linux system on an Asus c720 Chromebook, 2GB ram, 32GB SSD.
+To boot from the USB install media, you first need to unlock developer mode.
+Power on the machine with the USB inserted and press CTRL+L at the warning screen, followed by ESC when prompted at the SeaBIOS screen, and select the USB option.  When presented with the boot menu, highlight i686 and press tab, append ‘mem=1024m’ to the end of the options and hit enter.  Arch installer will now boot.
+
+$ sgdisk --zap-all /dev/sda
+$ cgdisk /dev/sda
+
+The next step is to make three partitions. A small ef02 partition at the beginning of the drive, a 100M+ 8300 partition to be mounted directly to /boot, and a *rest of space* 8E00 LVM partition that will hold the encrypted logical volumes. Using cgdisk, following these steps in order should yield the correct partitions.
+1. n for new partition
+2. 2048 (default) offset
+3. 128M
+4. type 8300
+5. blank label
+this creates the unencrypted /boot partition as sda1, there should be “free space” listed ABOVE this entry
+6. n for new partition in space above previously created partition
+7. 34 (default) offset
+8. 1007K
+9. type ef02
+10. blank label
+sda2 is created, GRUB will not funciton without this partition. In the last “free space” below the existing partitions
+11. n for new partition
+12. (default) offset
+13. (default) size
+14. type 8E00
+15. blank label
+sda3 is the LVM that will contain the encrypted logical volumes.
+16. w to write
+17. yes to confirm
+18. q to quit
+
+$ cryptsetup luksFormat /dev/sda3
+$ cryptsetup luksOpen /dev/sda3 luks
+$ pvcreate /dev/mapper/luks
+$ vgcreate vg0 /dev/mapper/luks
+$ lvcreate -L 4G vg0 -n swap
+$ lvcreate -l +100%FREE vg0 -n root
+
+Your own partition scheme may vary.  Create /home and any other encrypted partitions using lvcreate now if needed.
+
+$ mkfs.ext4 /dev/sda1
+$ mkfs.ext4 /dev/mapper/vg0-root
+$ mkswap /dev/mapper/vg0-swap
+$ mount /dev/mapper/vg0-root /mnt
+$ mkdir /mnt/boot
+$ mount /dev/sda1 /mnt/boot
+$ swapon /dev/mapper/vg0-swap
+
+The tiny ef02 partition at the beginning of the disk (sda2) is not touched. The logical volumes created on sda3 are mounted, and the swap created on sda3 is turned on. The 128M 8300 (sda1) is formatted and mounted to /mnt/boot.
+It’s a fairly straightforward install from here.
+
+$ pacstrap -i /mnt base base-devel
+$ genfstab -U -p /mnt >> /mnt/etc/fstab
+$ nano /mnt/etc/fstab # sda1 ext4 on /boot, vg0-root ext4 on /, vg0-swap swap on none
+$ arch-chroot /mnt /bin/bash
+$ nano /etc/locale.gen
+$ locale-gen
+$ echo LANG=en_GB.UTF-8 > /etc/locale.conf
+$ ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
+$ hwclock --systohc --utc
+$ echo MYHOSTNAME > /etc/hostname
+$ nano /etc/hosts # append MYHOSTNAME to
+$ pacman -S iw wpa_supplicant dialog # your own network setup will vary, this just allows me to connect to wifi
+$ passwd
+
+We need to supply some information to mkinitcpio and re-generate it.
+
+$ nano /etc/mkinitcpio.conf
+
+Locate the MODULES and add ‘ext4’, the same format as the root partition.
+Locate HOOKS and add ‘encrypt’ and ‘lvm2’. These must be listed BEFORE ‘filesystems’. e.g.
+MODULES=”ext4″
+HOOKS=”base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck”
+
+$ mkinitcpio -p linux
+$ pacman -S grub
+$ nano /etc/default/grub
+
+before we install grub we need to configure some default parameters that will be included in the genrated grub.cfg.
+GRUB_CMDLINE_LINUX=”cryptdevice=/dev/disk/by-uuid/xxxx:vg0 root=/dev/mapper/vg0-root resume=/dev/mapper/vg0-swap ro”
+where xxxx is the UUID of sda3. If you have any other partitions such as home, they do not need to be listed here – they should have been generated in the fstab file.
+
+$ grub-install target=i386-pc --recheck /dev/sda
+$ grub-mkconfig -o /boot/grub/grub.cfg
+$ exit
+$ reboot
+
+lvmetad.socket warnings can be ignored according to the wiki.
+And there you have it.

@@ -1,0 +1,126 @@
+make
+sudo make install
+sudo make uninstall
+make clean
+or sudo checkinstall
+
+dconf-editor
+
+curl ipecho.net/plain
+
+ELLIE 0273102420
+NATHAN 897557
+CODING
+
+ int main(int argc, char** argv)
+// argc is the argument count, argv is an array of strings given as arguments, and argv[0] is the name of the program
+// for example program --version will result in argc=2 and argv = {"program","--version"}
+
+DISPLAY
+$ xrandr -q
+$ xrandr --output HDMI1 --mode 1920x1080
+$ xrandr --output eDP1 --right-of  HDMI1
+
+UTILS
+diskpart
+$ tr -dc 'A-Za-z0-9' < /dev/urandom | fold -w 8 | tripcode | grep nsf001
+
+$ wget http://ipinfo.io/ip -qO -  
+$ scp your_username@remotehost.edu:foobar.txt /local/dir
+$ ncmpcpp (u updates)
+$ gcolor
+$ pavucontrol
+$ ps -aux | grep foo
+$ kill id
+$ killall foo
+$ lspci -k
+$ whereis
+$ find / -name foo
+$ xbacklight -set 90
+$ ghex
+$ cat file | cut -d ":" -f 1 > out
+$ 7z a -pPASS output.7z files.txt
+$ java -jar jpodder1.0RC2-Linux.jar
+$ mplayer -vo png -frames 1 tv://
+$ export | $ unset
+$ mkdosfs -F 32 -I /dev/sdX
+$ sudo mount -o gid=wheel,fmask=113,dmask=002 /dev/sdb1 /mnt/usb16
+$ sudo dd if=filename.iso of=/dev/usbdevice bs=4M; sync
+$ cat file | cut d "del" -f 1 > out
+$ vblank_mode=0 glxgears & sleep 15 ; killall glxgears
+$ feh --bg-scale /path/to/image.file
+
+/usr/bin/i3-sensible-terminal
+
+$ git init
+$ git remote add origin https://github.com/monkey/foo.git
+$ git add .
+$ git pull https://
+$ git commit -a -m "comment"
+$ git push -u original --all
+
+$ pacman -Syu
+$ pacman -Qdt packages installed as deps for others but not needed anymore
+$ pacman -Qet packages that or not dependancies for other packages
+$ pacman -Rns remove package, deps and configs
+$ paccache
+$ pacman -Ql <package> show details of package
+
+ALIAS
+alias fuck='sudo $(history -p \!\!)'
+ALIAS - .zshrc
+alias fuck='sudo $(fc -ln -1)'
+
+NETWORKING
+$ ifconfig - local IP
+$ wget http://ipinfo.io/ip -qO -  # public IP
+$ iw dev
+$ ifconfig wlp1s0 up/down
+
+VPN
+$ pptpsetup --create my_tunnel --server --username --password --encrypt
+$ pon my_tunnel
+$ ip route add default dev ppp0
+$ poff my_tunnel
+
+DECOMPILERS
+$ gdb
+$ objdump
+
+PHUN
+$ proxychains
+$ macchanger
+
+$ airmon-ng start wlp1s0
+$ airodump-ng mon0 --channel
+$ aireplay-ng mon0
+$ aircrack-ng
+
+$ airgraph-ng
+$ nmap -sP 192.168.1.0/24
+
+WORDLIST GEN
+$ perl ~/bin/wg.pl -l 8 -u 64 -v 
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX YZ0123456789\`\~\!\@\#\$\%\^\&\*\(\)\-\_\+\=\[\]\;\’\,\.\/\<\>\?\:\”\{\}\|\ > words.txt
+$ perl /home/user/bin/wg.pl -l 10 -u 10 -v abcdefghijklmnopqrstuvwxyz1234567890 | sudo aircrack-ng /fun/airodump/home/cap-01.cap -e BTHub3-WQC6 -w -BSSID = 00:FE:F4:5C:BB:60
+ 
+$ netdiscover
+
+$ sqlmap -u {site} --dbs
+$ sqlmap -u {site} -D {db} --tables 
+$ sqlmap -u {site} -D {db} -T {table} --columns 
+$ sqlmap -u {site} -D {db} -T {table} -C {column} --dump
+
+has anyone really been far even as decided to use even go want to do look more like?
+( ͡° ͜ʖ ͡°)
+
+Step 1: Write a Business Plan
+Step 2: Get Business Assistance and Training
+Step 3: Choose a Business Location
+Step 4: Finance Your Business
+Step 5: Determine the Legal Structure of Your Business
+Step 6: Register a Business Name ("Doing Business As")
+Step 7: Get a Tax Identification Number
+Step 8: Register for State and Local Taxes
+Step 9: Obtain Business Licenses and Permits
+Step 10: Understand Employer Responsibilities
