@@ -2,6 +2,7 @@ cryptsetup luksOpen /dev/sdX mapName
 mount /dev/mapper/mapName /mountpoint
 chown user:user /mountpoint
 umount /home/user/data mapName
+cryptsetup close mapName
 
 make
 sudo make install
